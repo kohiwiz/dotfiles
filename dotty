@@ -3,38 +3,43 @@
 # dotty - simple helper to initiate a new installation
 
 install_yay() {
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd ..
+    cur_dir=$(pwd)
+    sudo git clone https://aur.archlinux.org/yay.git /opt/yay
+    cd /opt/yay
+	sudo chown $USER -R $(pwd)
+    makepkg -si
+
+    cd $cur_dir
 }
 
 continue_yn () {
-while true; do
-    read -p "Do you want to do a full install? [Y/n] " yn
-	yn=${yn:-y}
-    case $yn in
-        [Yy]* ) break;;
-        [Nn]|[Qq]* ) exit 0;;
-        * ) ;;
-    esac
-done
+    while true; do
+        read -p "Do you want to do a full install? [Y/n] " yn
+        yn=${yn:-y}
+        case $yn in
+            [Yy]* ) break;;
+            [Nn]|[Qq]* ) exit 0;;
+            * ) ;;
+        esac
+    done
 }
+
+[ $(id -u) -ne 0 ] && echo "This script requires root privileges"; exit 0
 
 release_info="cat /etc/*release"
 os=$( $release_info | grep "^ID=" | cut -d = -f 2)
 
-[[ $os != "arch" ]] && echo -e "\n\e[31mDotty only supports arch linux for now; sorry for the inconvenience\e[0m" && exit 0
+[[ $os != "arch" ]] && echo -e "\n\e[31mDotty only supports pacman for now; sorry for the inconvenience\e[0m" && exit 0
 
 continue_yn
 
 $(yay -V > /dev/null 2>&1)
 [ $? == 127 ] && echo -e "\e[033myay\e[0m is not installed; installing it" && install_yay
 
-echo -e "\e[34mInstalling\e[0m pkgs" && yay -S --needed $(yay.list) 2> /dev/null
+echo -e "\e[34mInstalling\e[0m pkgs" && yay -S --needed $(cat yay.list) 2> /dev/null
 
-stow -d ${HOME} rss
-stow -d ${HOME} shell
-stow -d ${HOME} term
-stow -d ${HOME} vim
-stow -d ${HOME} x
+stow rss
+stow shell
+stow term
+stow vim
+stow x
