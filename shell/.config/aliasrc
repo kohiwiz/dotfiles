@@ -1,0 +1,29 @@
+#!/bin/bash
+
+alias \
+    grep="grep --color=auto" \
+    ls="ls -hN --color=auto --group-directories-first" \
+	bat="bat --theme Nord"
+
+alias \
+    ll="exa -l --group-directories-first" \
+    la="ll -a" \
+    lat="la -TI '.git'" \
+    v='nvim'
+
+alias \
+	cp="cp -iv" \
+	mv="mv -iv" \
+	rm="rm -vI" \
+	mkd="mkdir -pv" \
+	dd="dd bs=5M status=progress oflag=sync" \
+	ffmpeg="ffmpeg -hide_banner" \
+    yt="youtube-dl -o '~/vids/%(uploader)s/%(title)s.%(ext)s' -f 'bestvideo+bestaudio' --write-description --merge-output-format 'mkv'" \
+    ytmu="youtube-dl -x -o '~/media/music/unorganized/%(playlist_index)s - %(title)s.%(ext)s' --audio-format 'opus' --audio-quality 0"
+
+alias \
+    mpv="devour mpv" \
+	zathura="devour zathura" \
+	sxiv="devour sxiv"
+
+mkcd () { mkd -- "$1" && cd -P -- "$1" }
